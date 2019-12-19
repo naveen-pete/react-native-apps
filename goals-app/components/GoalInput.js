@@ -7,7 +7,12 @@ const GoalInput = ({ visible, onAddGoal, onCancel }) => {
   const handleGoalChange = changedGoal => setGoal(changedGoal);
 
   const handleAddPress = () => {
-    onAddGoal(goal);
+    const newGoal = goal.trim();
+    if (newGoal.length <= 0) {
+      return;
+    }
+
+    onAddGoal(newGoal);
     setGoal('');
   };
 
