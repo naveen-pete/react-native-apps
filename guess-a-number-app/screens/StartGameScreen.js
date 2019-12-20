@@ -6,10 +6,10 @@ import Card from '../components/Card';
 import Input from '../components/Input';
 import NumberView from '../components/NumberView';
 
-const StartGameScreen = props => {
+const StartGameScreen = ({ onStartGame }) => {
   const [enteredValue, setEnteredValue] = useState('');
-  const [confirmed, setConfirmed] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState();
+  const [confirmed, setConfirmed] = useState(false);
 
   const handleChangeText = inputText => {
     setEnteredValue(inputText.replace(/[^0-9]/g, ''));
@@ -17,7 +17,7 @@ const StartGameScreen = props => {
 
   const handleResetPress = () => {
     setEnteredValue('');
-    setSelectedNumber(undefined);
+    setSelectedNumber(null);
     setConfirmed(false);
   };
 
@@ -33,8 +33,8 @@ const StartGameScreen = props => {
       return;
     }
 
-    setSelectedNumber(number);
     setEnteredValue('');
+    setSelectedNumber(number);
     setConfirmed(true);
 
     Keyboard.dismiss();
@@ -45,7 +45,7 @@ const StartGameScreen = props => {
     confirmedOutput = <Card style={styles.summaryContainer}>
       <Text>You selected</Text>
       <NumberView>{selectedNumber}</NumberView>
-      <Button title="Start Game" />
+      <Button title="Start Game" onPress={() => onStartGame(selectedNumber)} />
     </Card>;
   }
 

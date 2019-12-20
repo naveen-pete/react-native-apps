@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, Button, Alert, StyleSheet } from 'react-native';
+
+import NumberView from '../components/NumberView';
+import Card from '../components/Card';
 
 const generateRandomBetween = (min, max, exclude) => {
   min = Math.ceil(min);
@@ -13,10 +16,68 @@ const generateRandomBetween = (min, max, exclude) => {
   }
 };
 
-const GameScreen = ({ userChoice }) => {
-  const [currentGuess, setCurrentGuess] = useState(generateRandomBetween(1, 100, userChoice));
+const GameScreen = ({ userNumber, onGameOver }) => {
+  const [currentGuess, setCurrentGuess] = useState(
+    generateRandomBetween(1, 100, userNumber)
+  );
+  const [rounds, setRounds] = useState(0);
+
+  const currentLow = useRef(1);
+  const currentHigh = useRef(100);
+
+  useEffect(() => {
+    if (currentGuess === userNumber) {
+      onGameOver(rounds);
+    }
+  }, [currentGuess, userNumber]);
+
+  const handleNextGuess = direction => {
+    if ((direction === 'lower' && currentGuess < userNumber) ||
+      (direction === 'greater' && currentGuess > userNumber)) {
+      Alert.alert('Bad Input', 'Please provide correct input.');
+      return;
+    }
+
+    if (direction === 'lower') {
+      currentHigh.current = currentGuess;
+    } else {
+      currentLow.current = currentGuess;
+    }
+
+    const newGuess = generateRandomBetween(
+      currentLow.current,
+      currentHigh.current,
+      currentGuess
+    );
+    setCurrentGuess(newGuess);
+    setRounds(curRounds => curRounds + 1);
+  };
+
+  return (
+    <View style={styles.screen}>
+      <Text>My Guess</Text>
+      <NumberView>{currentGuess}</NumberView>
+      <Card style={styles.buttonGroup}>
+        <Button title="Lower" onPress={handleNextGuess.bind(this, 'lower')} />
+        <Button title="Greater" onPress={handleNextGuess.bind(this, 'greater')} />
+      </Card>
+    </View>
+  );
 };
 
 export default GameScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    padding: 10,
+    alignItems: 'center'
+  },
+  buttonGroup: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20,
+    width: 300,
+    maxWidth: '80%'
+  }
+});
