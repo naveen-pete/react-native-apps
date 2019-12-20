@@ -1,13 +1,21 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 
+import Colors from '../constants/colors';
+import TitleText from '../components/TitleText';
+import BodyText from '../components/BodyText';
+
 const GameOverScreen = ({ userNumber, totalRounds, onNewGame }) => {
   return (
     <View style={styles.screen}>
-      <Text>Congratulations! Game is over!</Text>
-      <Text>Total Rounds: {totalRounds}</Text>
-      <Text>User Number: {userNumber}</Text>
-      <Button title="New Game" onPress={onNewGame} />
+      <TitleText>Congratulations! Game is over!</TitleText>
+      <BodyText>Total Rounds: {totalRounds}</BodyText>
+      <BodyText>User Number: {userNumber}</BodyText>
+      <Button
+        title="New Game"
+        color={Colors.primary}
+        onPress={onNewGame}
+      />
     </View>
   );
 };
